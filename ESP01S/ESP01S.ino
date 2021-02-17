@@ -32,7 +32,8 @@ const char closed_text[] = "已关闭";
 const char open_color[] = "#00EE00";
 const char closed_color[] = "#FF0000";
 
-char auth[] = "77f65ef832c0";
+//填写在点灯科技申请的密钥
+char auth[] = "";
 //wifi连接状态
 bool wifiStatus = false;
 //设备状态
