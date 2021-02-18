@@ -12,9 +12,8 @@
 #include<SoftwareSerial.h>
 // rx tx
 SoftwareSerial softSerial(4,5);
-const char ON = 'T';
-const char OFF = 'F';
-const char ACK = 'K';
+const byte ON = 8;
+const byte OFF = 7;
 
 char data;
 
@@ -33,13 +32,13 @@ void sync() {
 /**
  * 监听ESP的状态修改，读取数据
  * ArduinoUNO板，因为同一时刻只能监听一个软串口，导致可能ESP发送数据，但是因为当前软串口没有监听数据导致丢失。
- * 解决方案:由ArduinoUNO主动询问更新：UNO发送ACK信号，ESP收到ACK信号将保存的最新状态发送到UNO板中
+ * 解决方案:由ArduinoUNO主动询问更新：UNO发送SYN信号，ESP收到SYN信号将保存的最新状态发送到UNO板中
  */
 void esp_listen() {
     //开始监听软串口RX端的数据（同一时刻软串口只能监听一个）
     softSerial.listen();
-    //首先发送ACK信号，ESP模块收到ACK信号之后再发送状态
-    softSerial.write(ACK);
+    //发送当前状态
+    softSerial.write(getState());
     delay(5);
     if (softSerial.available()) {
         data = softSerial.read();

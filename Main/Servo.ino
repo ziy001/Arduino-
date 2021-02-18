@@ -4,7 +4,12 @@
  * @date:2021/2/2
  */
  
-//核心实时状态，改变一次必须调用sync()和ESP做数据同步
+/**
+ * 核心状态变量
+ * 规范：每次改变必须和ESP做一次同步通信
+ * false:上锁
+ * true:解锁
+ */
 bool oState = false;
 //角度值
 int angle = 0;

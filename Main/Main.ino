@@ -1,6 +1,10 @@
 /**
+ * arduino主程序
+ * <p>1.0：正式版</p>
+ * <br/>
+ * <p>1.1：增加WatchDog休眠模式,大大提高了整个应用的耗电量</p>
  * @author ZIY
- * @version 1.0
+ * @version 1.1
  * @date:2021/2/2
  */
 
@@ -40,6 +44,10 @@ void defaultInit() {
     iot_init();
     //舵机初始化，必须在最后初始化
     servo_init();
+    //休眠时间:arg0 * arg1
+    // 0=16ms, 1=32ms,2=64ms,3=128ms,4=250ms,5=500ms
+    // 6=1 sec,7=2 sec, 8=4 sec, 9= 8sec
+    watchDog_init(5, 1);
 }
 /**
  * 主处理程序
@@ -70,6 +78,10 @@ void setup() {
 }
 
 void loop() {
-    defaultRun();
-    delay(250);
+    if(checkDog()){
+//        Serial.println("run...");
+        defaultRun();
+        setDogCount(0);
+    }
+    Sleep_avr();
 }

@@ -21,9 +21,8 @@
 #include <Blinker.h>
 #define AUTO_CONN_TIME 30
 //状态标识码（用于与arduino进行通信）
-const char ON = 'T';
-const char OFF = 'F';
-const char ACK = 'K';
+const byte ON = 8;
+const byte OFF = 7;
 
 const char open_icon[] = "fas fa-door-open";
 const char closed_icon[] = "fas fa-door-closed";
@@ -33,7 +32,7 @@ const char open_color[] = "#00EE00";
 const char closed_color[] = "#FF0000";
 
 //填写在点灯科技申请的密钥
-char auth[] = "";
+char auth[] = "77f65ef832c0";
 //wifi连接状态
 bool wifiStatus = false;
 //设备状态
@@ -130,9 +129,12 @@ void listen() {
     if (Serial.available()) {
         char data = Serial.read();
         BLINKER_LOG("接收的数据: ");BLINKER_LOG(data);
-        //ACK信号
-        if (data == ACK) {
-            Serial.write(oState ? ON : OFF);
+        //syn信号
+        if (data == 0 || data == 1) {
+            if (data != oState) {
+                Serial.write(oState ? ON : OFF);
+                return;
+            }
         }
         if (data != (oState ? ON : OFF)) {
             if (data == ON) {
