@@ -133,21 +133,20 @@ void listen() {
         if (data == 0 || data == 1) {
             if (data != oState) {
                 Serial.write(oState ? ON : OFF);
-                return;
             }
+            return;
         }
         if (data != (oState ? ON : OFF)) {
             if (data == ON) {
                 setOstate(true);
                 //反馈按钮
                 ONButUI();
-                return;
             }
             if (data == OFF) {
                 setOstate(false);
                 OFFButUI();
-                return;
             }
+            return;
         }
     }
 }

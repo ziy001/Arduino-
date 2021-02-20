@@ -52,10 +52,10 @@ void remind_fail() {
  */
 void remind(int time) {
     digitalWrite(HG_PIN, HIGH);
-    digitalWrite(BUZZER_PIN, HIGH);
+//    digitalWrite(BUZZER_PIN, HIGH);
     digitalWrite(HR_PIN, HIGH);
     delay(time);
     digitalWrite(HG_PIN, LOW);
-    digitalWrite(BUZZER_PIN, LOW);
+//    digitalWrite(BUZZER_PIN, LOW);
     digitalWrite(HR_PIN, LOW);
 }
