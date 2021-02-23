@@ -13,9 +13,9 @@
 #define BLINKER_WIFI
 //天猫精灵
 #define BLINKER_ALIGENIE_SENSOR
-//小米小爱
-#define BLINKER_MIOT_SENSOR
-//百度小度
+//小米小爱(传感器使用会有问题，推荐使用MIOT_LIGHT,再使用自定义语音来控制)
+#define BLINKER_MIOT_LIGHT
+//百度小度(未测试)
 #define BLINKER_DUEROS_SENSOR
 
 #include <Blinker.h>

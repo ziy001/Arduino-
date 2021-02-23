@@ -15,9 +15,9 @@ void SQP_init() {
 
 /**
  * 查询并返回SQP当前状态
- * 0(false):感应成功，门处于关闭状态
- * 1(true):未感应，门处于打开状态
+ * 0(false):未感应，门处于打开状态
+ * 1(true):感应成功，门处于关闭状态
  */
 bool getSQPState() {
-    return digitalRead(SQP_PIN);
+    return !digitalRead(SQP_PIN);
 }

@@ -10,6 +10,7 @@ void rc522_init() {
   //MFRC522初始化
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522
+  
 }
 
  
@@ -22,11 +23,11 @@ void run_rc522() {
     }
     if (rc522_verify()) {
         //匹配成功
-        Serial.println("\n卡匹配成功");
+        Serial.println("\nSuccessfully unlocked by card");
         success();
     } else {
         //匹配错误
-        Serial.println("\n卡匹配失败");
+        Serial.println("\nFailed to unlock by card");
         fail();
     }
     rc522_halt();
@@ -34,6 +35,7 @@ void run_rc522() {
 
 /**
  * RC522对卡信息进行验证
+ * 返回是否验证成功
  */
 bool rc522_verify() {
   //取出卡信息进行对比

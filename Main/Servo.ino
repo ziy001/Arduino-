@@ -32,7 +32,7 @@ void write(int pos) {
         delayMicroseconds(20000 - pulseWidth);
     }
     angle = pos;
-    Serial.print("角度值: ");Serial.println(angle);
+    Serial.print("angle: ");Serial.println(angle);
 }
 
 bool getState() {return oState;}
@@ -42,21 +42,11 @@ void setState(bool flag) {
 }
 void servo_init() {
     pinMode(SERVO_PIN, OUTPUT);
-    //辅助接近开关一起判断
-    //门处于打开状态
-    bool f1 = getSQPState();
-    delay(500);
-    if (getSQPState() && f1) {
-        do {
-            write(MAX_POS);
-        } while (angle < MAX_POS);
-        setState(true);
+    //调整门锁状态
+    if (getSQPState()) {
+        privateLock();
     } else {
-        //关闭状态
-        do {
-            write(MIN_POS);
-        } while (angle > MIN_POS);
-        setState(false);
+        privateUnLock();
     }
 }
 /**
@@ -64,20 +54,13 @@ void servo_init() {
  */
 void unlock() {
     if (!oState) {
-        do {
-            write(MAX_POS);
-        } while (angle < MAX_POS);
-        setState(true);
-        Serial.println("已解锁...");
+        privateUnLock();
+        Serial.println("Unlocked...");
     }
-    for (int i = 0; i < AUTO_LOCK_TIME; i++) {
-      if (getSQPState()) {
-          lock();
-          return;
-      }
-      delay(1000);
+    for (byte i = 0; i < AUTO_LOCK_TIME && getSQPState(); i++) {
+        delay(1000);
     }
-    //超时上锁
+    //lock
     lock();
 }
 /**
@@ -85,18 +68,27 @@ void unlock() {
  * 等待接近开关感应后再上锁
  */
 void lock() {
-    Serial.println("\n等待上锁...");
+    Serial.println("\nWaiting for the lock...");
     while (true) {
-        if (!getSQPState()) {
+        if (getSQPState()) {
             delay(500);
-            if (!getSQPState()) {
-                do {
-                    write(MIN_POS);
-                } while (angle > MIN_POS);
-                setState(false);
-                Serial.println("已上锁...");
+            if (getSQPState()) {
+                privateLock();
+                Serial.println("locked...");
                 return;
             }
         }
     }
+}
+void privateLock() {
+    do {
+        write(MIN_POS);
+    } while (angle > MIN_POS);
+    setState(false);
+}
+void privateUnLock() {
+    do {
+        write(MAX_POS);
+    } while (angle < MAX_POS);
+    setState(true);
 }

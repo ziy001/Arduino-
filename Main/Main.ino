@@ -70,7 +70,7 @@ void setup() {
     delay(10);
     //初始化成功提醒
     remind(1200);
-    Serial.println("==========程序初始化完毕==========");
+    Serial.println("=========Program initialization completed==========");
     //锁的初始形态修正
     while (getState()) {
         lock();

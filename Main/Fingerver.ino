@@ -51,7 +51,7 @@ void f_init() {
   //获取存储的指纹个数
   finger.getTemplateCount();
 
-  Serial.print("指纹库中有 "); Serial.print(finger.templateCount); Serial.println(" 个指纹数据");
+  Serial.print("Number of fingerprints: "); Serial.println(finger.templateCount);
   //关闭电源
   digitalWrite(POWER, LOW);
 }
@@ -73,7 +73,7 @@ void run_fingerver() {
         switch (fid) {
             case -1:
                 //一般由于设备初始化未完成导致，但是可能因为本来没有使用指纹解锁，模块上本来就没得指纹无法获取指纹，所以就导致无端进入这个死循环
-                Serial.println("\n指纹无法识别!!!\n1、请检查是否有手指按压\n2、请检查设备是否正常运行");
+                Serial.println("\nFingerprint error");
                 if (digitalRead(HAVE) == 0) {
                     digitalWrite(POWER, LOW);
                     return;
@@ -81,12 +81,12 @@ void run_fingerver() {
                 delay(100);
                 break;
             case -2:
-                Serial.print("\n指纹匹配失败: ");Serial.println(fid);
+                Serial.print("\nFingerprint matching failed: ");Serial.println(fid);
                 digitalWrite(POWER, LOW);
                 fail();
                 goto end;
             default:
-                Serial.print("\n指纹匹配成功: ");Serial.println(fid);
+                Serial.print("\nFingerprint matching succeeded: ");Serial.println(fid);
                 digitalWrite(POWER, LOW);
                 success();
                 goto end;
@@ -99,6 +99,8 @@ void run_fingerver() {
 //指纹验证,成功即返回指纹ID，返回-1表示：当前指纹识别错误。返回-2表示：当前指纹匹配错误
 int f_verify() {
     fSerial.listen();
+    //验证传感器
+    while(!finger.verifyPassword());
     uint8_t p = finger.getImage();
     if (p != FINGERPRINT_OK)  return -1;
   

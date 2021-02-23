@@ -5,7 +5,9 @@
  * @version 1.0
  * @date:2021/2/2
  */
-
+#include <avr/sleep.h>
+#include <avr/wdt.h>
+#include<SoftwareSerial.h>
 #include <Adafruit_Fingerprint.h>
 #include <SPI.h>
 #include <MFRC522.h>
@@ -18,12 +20,9 @@
 #define SS_PIN 10
 #define RST_PIN 9
 #define DATA_COUNT 4
-//白名单卡数量,必须需nuidPICC二维数组的行数保持一致
-#define CARD_COUNT 2
-//存储卡信息,数量与CARD_COUNT相等
-const byte nuidPICC[CARD_COUNT][DATA_COUNT] = {
-  {57, 58, 10, 179}, 
-  {10, 149, 226, 63}
+#define CARD_COUNT 1
+const byte nuidPICC[][DATA_COUNT] = {
+  {57, 58, 10, 179}
 };
 
 /**

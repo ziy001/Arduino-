@@ -8,14 +8,13 @@
  * @version 1.1
  * @date:2021/2/2
  */
-
-#include<SoftwareSerial.h>
+ 
 // rx tx
 SoftwareSerial softSerial(4,5);
 const byte ON = 8;
 const byte OFF = 7;
 
-char data;
+byte data;
 
 void iot_init() {
     softSerial.begin(38400);
@@ -46,7 +45,7 @@ void esp_listen() {
         switch (data) {
             case ON:
                 if (getState() == false) {
-                    Serial.println("\nESP ON 成功");
+                    Serial.println("\nSuccessfully unlocked by ESP");
                     success();
                 }
                 break;

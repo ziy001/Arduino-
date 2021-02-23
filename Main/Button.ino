@@ -18,7 +18,7 @@ void but_listen() {
     if (digitalRead(BUT_PIN) == 0) {
         delay(PRESS);
         if (digitalRead(BUT_PIN) == 0) {
-            Serial.println("\n按钮操作成功");
+            Serial.println("\nSuccessfully unlocked by button");
             //解锁
             success();
             //等待长按放开

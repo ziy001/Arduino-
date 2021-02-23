@@ -5,9 +5,6 @@
  * @date:2021/2/18
  */
 
-#include <avr/sleep.h>
-#include <avr/wdt.h>
-
 byte a;
 volatile byte dogCount = 0;
 

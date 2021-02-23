@@ -31,7 +31,7 @@ void customRemind(int greenLEDTime, int redLEDTime, int buzzerTime) {
 void remind_success() {
     digitalWrite(HG_PIN, HIGH);
     digitalWrite(BUZZER_PIN, HIGH);
-    delay(500);
+    delay(250);
     digitalWrite(HG_PIN, LOW);
     digitalWrite(BUZZER_PIN, LOW);
 }
@@ -43,7 +43,7 @@ void remind_success() {
 void remind_fail() {
     digitalWrite(HR_PIN, HIGH);
     digitalWrite(BUZZER_PIN, HIGH);
-    delay(1000);
+    delay(500);
     digitalWrite(HR_PIN, LOW);
     digitalWrite(BUZZER_PIN, LOW);
 }
