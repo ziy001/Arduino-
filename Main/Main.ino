@@ -26,7 +26,7 @@ void fail() {
 void defaultInit() {
     //初始化Serial的波特率
     Serial.begin(9600);
-    delay(100);
+    while (!Serial);  // For Yun/Leo/Micro/Zero/...  
     //RC522射频卡初始化
     rc522_init();
     delay(100);

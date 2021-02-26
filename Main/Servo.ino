@@ -32,7 +32,7 @@ void write(int pos) {
         delayMicroseconds(20000 - pulseWidth);
     }
     angle = pos;
-    Serial.print("angle: ");Serial.println(angle);
+    Serial.print("pos: ");Serial.println(angle);
 }
 
 bool getState() {return oState;}
@@ -68,13 +68,13 @@ void unlock() {
  * 等待接近开关感应后再上锁
  */
 void lock() {
-    Serial.println("\nWaiting for the lock...");
+    Serial.println("\n\rWaiting for the lock...");
     while (true) {
         if (getSQPState()) {
             delay(500);
             if (getSQPState()) {
                 privateLock();
-                Serial.println("locked...");
+                Serial.println("locked..");
                 return;
             }
         }

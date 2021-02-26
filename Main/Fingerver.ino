@@ -8,50 +8,22 @@
  * @date:2021/2/2
  */
  
-#if (defined(__AVR__) || defined(ESP8266)) && !defined(__AVR_ATmega2560__)
-
-SoftwareSerial fSerial(TX_PIN, RX_PIN);
-
-#else
-
-#define fSerial Serial1
-
-#endif
-
-
+const SoftwareSerial fSerial(TX_PIN, RX_PIN);
 const Adafruit_Fingerprint finger = Adafruit_Fingerprint(&fSerial);
 
-int fid = -3;
+short fid = -3;
 
 void f_init() {
     pinMode(HAVE, INPUT);
     pinMode(POWER, OUTPUT);
     //指纹模块供电，完成初始化
     digitalWrite(POWER, HIGH);
-    while (!Serial);  // For Yun/Leo/Micro/Zero/...  
     // 设置传感器串行端口的数据速率
     finger.begin(57600);
     delay(5);
-    if (finger.verifyPassword()) {
-      Serial.println("找到指纹传感器了！");
-    } else {
-      Serial.println("找不到指纹传感器 :(");
-      while (1) { delay(1); }
+    if (!finger.verifyPassword()) {
+        Serial.println("Fingerprint sensor not found");
     }
-  Serial.println(F("指纹模块参数"));
-  finger.getParameters();
-  Serial.print(F("Status: 0x")); Serial.println(finger.status_reg, HEX);
-  Serial.print(F("Sys ID: 0x")); Serial.println(finger.system_id, HEX);
-  Serial.print(F("Capacity: ")); Serial.println(finger.capacity);
-  Serial.print(F("Security level: ")); Serial.println(finger.security_level);
-  Serial.print(F("Device address: ")); Serial.println(finger.device_addr, HEX);
-  Serial.print(F("Packet len: ")); Serial.println(finger.packet_len);
-  //波特率
-  Serial.print(F("Baud rate: ")); Serial.println(finger.baud_rate);
-  //获取存储的指纹个数
-  finger.getTemplateCount();
-
-  Serial.print("Number of fingerprints: "); Serial.println(finger.templateCount);
   //关闭电源
   digitalWrite(POWER, LOW);
 }
@@ -73,27 +45,27 @@ void run_fingerver() {
         switch (fid) {
             case -1:
                 //一般由于设备初始化未完成导致，但是可能因为本来没有使用指纹解锁，模块上本来就没得指纹无法获取指纹，所以就导致无端进入这个死循环
-                Serial.println("\nFingerprint error");
+                Serial.println("\n\rFingerprint error");
                 if (digitalRead(HAVE) == 0) {
                     digitalWrite(POWER, LOW);
                     return;
                 }
-                delay(100);
+//                delay(100);
                 break;
             case -2:
-                Serial.print("\nFingerprint matching failed: ");Serial.println(fid);
+                Serial.print("\n\rFingerprint matching failed: ");Serial.println(fid);
                 digitalWrite(POWER, LOW);
                 fail();
                 goto end;
             default:
-                Serial.print("\nFingerprint matching succeeded: ");Serial.println(fid);
+                Serial.print("\n\rFingerprint matching succeeded: ");Serial.println(fid);
                 digitalWrite(POWER, LOW);
                 success();
                 goto end;
         }
     }
     end: return;
-//    Serial.println("\n======关闭电源======");
+//    Serial.println("\n\r======关闭电源======");
 }
 
 //指纹验证,成功即返回指纹ID，返回-1表示：当前指纹识别错误。返回-2表示：当前指纹匹配错误

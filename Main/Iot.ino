@@ -41,11 +41,11 @@ void esp_listen() {
     delay(5);
     if (softSerial.available()) {
         data = softSerial.read();
-//        Serial.print("\n接收的数据: ");Serial.println(data);
+//        Serial.print("\n\r接收的数据: ");Serial.println(data);
         switch (data) {
             case ON:
                 if (getState() == false) {
-                    Serial.println("\nSuccessfully unlocked by ESP");
+                    Serial.println("\n\rSuccessfully unlocked by ESP");
                     success();
                 }
                 break;

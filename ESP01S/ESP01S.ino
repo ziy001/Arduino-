@@ -37,6 +37,7 @@ char auth[] = "77f65ef832c0";
 bool wifiStatus = false;
 //设备状态
 bool oState;
+byte data;
 
 //定义按钮
 BlinkerButton BUT_1("btn-1");
@@ -127,7 +128,7 @@ void setOstate(bool state) {
  */
 void listen() {
     if (Serial.available()) {
-        char data = Serial.read();
+        data = Serial.read();
         BLINKER_LOG("接收的数据: ");BLINKER_LOG(data);
         //syn信号
         if (data == 0 || data == 1) {

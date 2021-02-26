@@ -1,16 +1,21 @@
-/**
+/*
  * @author ZIY
  * @version 1.0
  * @date:2021/2/2
  */
-
+#define NUID_SIZE 4
 const MFRC522 rfid(SS_PIN, RST_PIN);
+const byte newUid[NUID_SIZE] = {0xDE, 0xAD, 0xBE, 0xEF};
+const byte nuid[NUID_SIZE] = {57, 58, 10, 179};
+MFRC522::MIFARE_Key key;
 
 void rc522_init() {
-  //MFRC522初始化
-  SPI.begin(); // Init SPI bus
-  rfid.PCD_Init(); // Init MFRC522
-  
+    //MFRC522初始化
+    SPI.begin(); // Init SPI bus
+    rfid.PCD_Init(); // Init MFRC522
+    for (byte i = 0; i < 6; i++) {
+        key.keyByte[i] = 0xFF;
+    }
 }
 
  
@@ -23,11 +28,11 @@ void run_rc522() {
     }
     if (rc522_verify()) {
         //匹配成功
-        Serial.println("\nSuccessfully unlocked by card");
+        Serial.println("\n\rSuccessfully unlocked by card");
         success();
     } else {
         //匹配错误
-        Serial.println("\nFailed to unlock by card");
+        Serial.println("\n\rFailed to unlock by card");
         fail();
     }
     rc522_halt();
@@ -38,21 +43,17 @@ void run_rc522() {
  * 返回是否验证成功
  */
 bool rc522_verify() {
-  //取出卡信息进行对比
-  for (byte i = 0; i < CARD_COUNT; i++) {
-    int count = DATA_COUNT - 1;
-    for (; count >= 0; count--) {
-      if (nuidPICC[i][count] != rfid.uid.uidByte[count]) {
-        //不匹配
-        break;
-      }
+    //尝试对0扇区进行更改
+    if (rfid.MIFARE_UnbrickUidSector(false)) {
+        return false;
     }
-    if (count < 0) {
-      return true;
-      break;
+    //检查uid
+    for (byte i = 0; i < NUID_SIZE; i++) {
+        if (rfid.uid.uidByte[i] != nuid[i]) {
+            return false;
+        }
     }
-  }
-  return false;
+    return true;
 }
 
 /**
@@ -82,8 +83,9 @@ bool rc522_check() {
  * halt PICC
  */
 void rc522_halt() {
-    // 休眠 halt
+    // 指示处于激活状态的PICC进入停止状态。
     rfid.PICC_HaltA();
-    // Stop encryption on PCD
+    // 用于将PCD从其已验证状态退出。
+    //记住在与经过身份验证的PICC通信后调用此函数-否则无法启动新的通信。
     rfid.PCD_StopCrypto1();
 }

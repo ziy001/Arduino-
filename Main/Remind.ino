@@ -32,7 +32,7 @@ void remind_success() {
     digitalWrite(HG_PIN, HIGH);
     digitalWrite(BUZZER_PIN, HIGH);
     delay(250);
-    digitalWrite(HG_PIN, LOW);
+    digitalWrite(HG_PIN                                , LOW);
     digitalWrite(BUZZER_PIN, LOW);
 }
 
@@ -43,9 +43,13 @@ void remind_success() {
 void remind_fail() {
     digitalWrite(HR_PIN, HIGH);
     digitalWrite(BUZZER_PIN, HIGH);
-    delay(500);
-    digitalWrite(HR_PIN, LOW);
+    delay(250);
     digitalWrite(BUZZER_PIN, LOW);
+    delay(250);
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(250);
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(HR_PIN, LOW);
 }
 /**
  * 程序初始化完毕提醒

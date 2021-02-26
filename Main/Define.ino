@@ -19,11 +19,6 @@
 //定义针脚号
 #define SS_PIN 10
 #define RST_PIN 9
-#define DATA_COUNT 4
-#define CARD_COUNT 1
-const byte nuidPICC[][DATA_COUNT] = {
-  {57, 58, 10, 179}
-};
 
 /**
  * servo define
